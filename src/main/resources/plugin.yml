@@ -1,0 +1,54 @@
+name: NameTags
+main: org.kitteh.nametags.NameTags
+description: ${project.description}
+author: mbaxter
+url: http://kitteh.org
+version: '${project.version}'
+commands:
+  nametags:
+    usage: /nametags reload
+    permission: nametags.reload
+permissions:
+  nametags.color.black:
+    default: false
+  nametags.color.dark_blue:
+    default: false
+  nametags.color.dark_green:
+    default: false
+  nametags.color.dark_aqua:
+    default: false
+  nametags.color.darkred:
+    default: false
+  nametags.color.dark_purple:
+    default: false
+  nametags.color.gold:
+    default: false
+  nametags.color.gray:
+    default: false
+  nametags.color.dark_gray:
+    default: false
+  nametags.color.blue:
+    default: false
+  nametags.color.green:
+    default: false
+  nametags.color.aqua:
+    default: false
+  nametags.color.red:
+    default: false
+  nametags.color.light_purple:
+    default: false
+  nametags.color.yellow
+    default: false
+  nametags.format.magic:
+    default: false
+  nametags.format.bold:
+    default: false
+  nametags.format.strikethrough:
+    default: false
+  nametags.format.underline:
+    default: false
+  nametags.format.italic:
+    default: false
+  nametags.reload:
+    default: op
+    description: Reload shtuff
