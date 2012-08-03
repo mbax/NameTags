@@ -158,7 +158,9 @@ public class NameTags extends JavaPlugin implements Listener {
             }
         }
         name.append(player.getName());
-        name.setLength(16);
+        if (name.length() > 16) {
+            name.setLength(16);
+        }
         final String newName = name.toString();
         player.setMetadata(NameTags.METADATA_NAME, new FixedMetadataValue(this, newName));
         if (this.setDisplayName) {

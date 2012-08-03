@@ -37,7 +37,7 @@ permissions:
     default: false
   nametags.color.light_purple:
     default: false
-  nametags.color.yellow
+  nametags.color.yellow:
     default: false
   nametags.format.magic:
     default: false
