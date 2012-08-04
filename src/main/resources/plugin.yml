@@ -18,8 +18,6 @@ permissions:
     default: false
   nametags.color.dark_aqua:
     default: false
-  nametags.color.darkred:
-    default: false
   nametags.color.dark_purple:
     default: false
   nametags.color.dark_red:
