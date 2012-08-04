@@ -4,6 +4,7 @@ description: ${project.description}
 author: mbaxter
 url: http://kitteh.org
 version: '${project.version}'
+softdepend: [TagAPI]
 commands:
   nametags:
     usage: /nametags reload
@@ -20,6 +21,8 @@ permissions:
   nametags.color.darkred:
     default: false
   nametags.color.dark_purple:
+    default: false
+  nametags.color.dark_red:
     default: false
   nametags.color.gold:
     default: false

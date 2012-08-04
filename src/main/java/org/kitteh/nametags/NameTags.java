@@ -119,6 +119,11 @@ public class NameTags extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        if (!this.getServer().getPluginManager().isPluginEnabled("TagAPI")) {
+            this.getLogger().severe("TagAPI required. Get it at http://dev.bukkit.org/server-mods/tag/");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         this.configFile = new File(this.getDataFolder(), "config.yml");
         this.load();
         this.getServer().getPluginManager().registerEvents(this, this);
@@ -141,19 +146,19 @@ public class NameTags extends JavaPlugin implements Listener {
 
     private void calculate(Player player) {
         final StringBuilder name = new StringBuilder();
-        final List<Format> formats = Arrays.asList(Format.values());
-        Collections.shuffle(formats);
-        for (final Format format : formats) {
-            if (player.hasPermission(format.getNode())) {
-                name.append(format.getColor());
-                break;
-            }
-        }
         final List<Color> colors = Arrays.asList(Color.values());
         Collections.shuffle(colors);
         for (final Color color : colors) {
             if (player.hasPermission(color.getNode())) {
                 name.append(color.getColor());
+                break;
+            }
+        }
+        final List<Format> formats = Arrays.asList(Format.values());
+        Collections.shuffle(formats);
+        for (final Format format : formats) {
+            if (player.hasPermission(format.getNode())) {
+                name.append(format.getColor());
                 break;
             }
         }
