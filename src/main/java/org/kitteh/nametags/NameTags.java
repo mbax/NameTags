@@ -36,24 +36,24 @@ import org.kitteh.tag.TagAPI;
 public class NameTags extends JavaPlugin implements Listener {
 
     private enum Color {
+        aqua,
         black,
-        dark_blue,
-        dark_green,
+        blue,
         dark_aqua,
-        dark_red,
+        dark_blue,
+        dark_gray,
+        dark_green,
         dark_purple,
+        dark_red,
         gold,
         gray,
-        dark_gray,
-        blue,
         green,
-        aqua,
-        red,
         light_purple,
+        red,
         yellow;
 
-        private final String node;
         private final ChatColor color;
+        private final String node;
 
         Color() {
             this.color = ChatColor.valueOf(this.name().toUpperCase());
@@ -71,14 +71,14 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private enum Format {
-        magic,
         bold,
+        italic,
+        magic,
         strikethrough,
-        underline,
-        italic;
+        underline;
 
-        private final String node;
         private final ChatColor color;
+        private final String node;
 
         Format() {
             this.color = ChatColor.valueOf(this.name().toUpperCase());
@@ -94,13 +94,15 @@ public class NameTags extends JavaPlugin implements Listener {
         }
     }
 
+    private static final String CONFIG_REFRESH = "refreshAutomatically";
+    private static final String CONFIG_SET_DISPLAYNAME = "setDisplayName";
+    private static final String CONFIG_SET_TABNAME = "setTabName";
     private static final String METADATA_NAME = "nametags.displayname";
 
+    private File configFile;
+    private int refreshTaskID;
     private boolean setDisplayName;
     private boolean setTabName;
-    private File configFile;
-
-    private int refreshTaskID;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -187,10 +189,10 @@ public class NameTags extends JavaPlugin implements Listener {
         if (!this.configFile.exists()) {
             this.saveDefaultConfig();
         }
-        if(!this.getConfig().contains("refreshAutomatically")){
-            this.getConfig().set("refreshAutomatically", false);
+        if (!this.getConfig().contains(NameTags.CONFIG_REFRESH)) {
+            this.getConfig().set(NameTags.CONFIG_REFRESH, false);
         }
-        if (this.getConfig().getBoolean("refreshAutomatically", false)) {
+        if (this.getConfig().getBoolean(NameTags.CONFIG_REFRESH, false)) {
             this.refreshTaskID = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
                 @Override
                 public void run() {
@@ -198,9 +200,9 @@ public class NameTags extends JavaPlugin implements Listener {
                 }
             }, 1200, 1200);
         }
-        final boolean newSetDisplayName = this.getConfig().getBoolean("setDisplayName", false);
+        final boolean newSetDisplayName = this.getConfig().getBoolean(NameTags.CONFIG_SET_DISPLAYNAME, false);
         final boolean forceDisplayName = this.setDisplayName && !newSetDisplayName;
-        final boolean newSetTabName = this.getConfig().getBoolean("setTabName", false);
+        final boolean newSetTabName = this.getConfig().getBoolean(NameTags.CONFIG_SET_TABNAME, false);
         final boolean forceTabName = this.setTabName && !newSetTabName;
         if (forceDisplayName || forceTabName) {
             for (final Player player : this.getServer().getOnlinePlayers()) {
