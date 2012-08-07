@@ -76,6 +76,7 @@ public class NameTags extends JavaPlugin implements Listener {
         strikethrough,
         underline,
         italic;
+
         private final String node;
         private final ChatColor color;
 
@@ -98,6 +99,8 @@ public class NameTags extends JavaPlugin implements Listener {
     private boolean setDisplayName;
     private boolean setTabName;
     private File configFile;
+
+    private int refreshTaskID;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -177,11 +180,44 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private void load() {
+        if (this.refreshTaskID != -1) {
+            this.getServer().getScheduler().cancelTask(this.refreshTaskID);
+            this.refreshTaskID = -1;
+        }
         if (!this.configFile.exists()) {
             this.saveDefaultConfig();
         }
-        this.setDisplayName = this.getConfig().getBoolean("setDisplayName", false);
-        this.setTabName = this.getConfig().getBoolean("setTabName", false);
+        if(!this.getConfig().contains("refreshAutomatically")){
+            this.getConfig().set("refreshAutomatically", false);
+        }
+        if (this.getConfig().getBoolean("refreshAutomatically", false)) {
+            this.refreshTaskID = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+                @Override
+                public void run() {
+                    NameTags.this.playerRefresh();
+                }
+            }, 1200, 1200);
+        }
+        final boolean newSetDisplayName = this.getConfig().getBoolean("setDisplayName", false);
+        final boolean forceDisplayName = this.setDisplayName && !newSetDisplayName;
+        final boolean newSetTabName = this.getConfig().getBoolean("setTabName", false);
+        final boolean forceTabName = this.setTabName && !newSetTabName;
+        if (forceDisplayName || forceTabName) {
+            for (final Player player : this.getServer().getOnlinePlayers()) {
+                if (forceDisplayName) {
+                    player.setDisplayName(player.getName());
+                }
+                if (forceTabName) {
+                    player.setPlayerListName(player.getName());
+                }
+            }
+        }
+        this.setDisplayName = newSetDisplayName;
+        this.setTabName = newSetTabName;
+        this.playerRefresh();
+    }
+
+    private void playerRefresh() {
         for (final Player player : this.getServer().getOnlinePlayers()) {
             if ((player != null) && player.isOnline()) {
                 this.calculate(player);
