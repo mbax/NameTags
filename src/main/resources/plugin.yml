@@ -53,3 +53,29 @@ permissions:
   nametags.reload:
     default: op
     description: Reload shtuff
+  nametags.*:
+    default: false
+    description: Everything.
+    children:
+      nametags.color.black: true
+      nametags.color.dark_blue: true
+      nametags.color.dark_green: true
+      nametags.color.dark_aqua: true
+      nametags.color.dark_purple: true
+      nametags.color.dark_red: true
+      nametags.color.gold: true
+      nametags.color.gray: true
+      nametags.color.dark_gray: true
+      nametags.color.blue: true
+      nametags.color.green: true
+      nametags.color.aqua: true
+      nametags.color.red: true
+      nametags.color.light_purple: true
+      nametags.color.yellow: true
+      nametags.format.magic: true
+      nametags.format.bold: true
+      nametags.format.strikethrough: true
+      nametags.format.underline: true
+      nametags.format.italic: true
+      
+    
