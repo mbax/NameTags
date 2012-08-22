@@ -141,11 +141,9 @@ public class NameTags extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onNameTag(PlayerReceiveNameTagEvent event) {
-        for (final MetadataValue value : event.getNamedPlayer().getMetadata(NameTags.METADATA_NAME)) {
-            if (value.getOwningPlugin().equals(this)) {
-                event.setTag(value.asString());
-                break;
-            }
+        String tag = getDisplay(event.getNamedPlayer());
+        if (tag != null) {
+            event.setTag(tag);
         }
     }
 
@@ -179,6 +177,15 @@ public class NameTags extends JavaPlugin implements Listener {
         if (this.setTabName) {
             player.setPlayerListName(newName);
         }
+    }
+
+    private String getDisplay(Player player) {
+        for (final MetadataValue value : player.getMetadata(NameTags.METADATA_NAME)) {
+            if (value.getOwningPlugin().equals(this)) {
+                return value.asString();
+            }
+        }
+        return null;
     }
 
     private void load() {
@@ -222,8 +229,15 @@ public class NameTags extends JavaPlugin implements Listener {
     private void playerRefresh() {
         for (final Player player : this.getServer().getOnlinePlayers()) {
             if ((player != null) && player.isOnline()) {
+                String oldTag = getDisplay(player);
                 this.calculate(player);
-                TagAPI.refreshPlayer(player);
+                String newTag = getDisplay(player);
+                boolean one = oldTag == null && newTag != null;
+                boolean two = oldTag != null && newTag == null;
+                boolean three = (oldTag != null && newTag != null) && !oldTag.equals(newTag);
+                if (one || two || three) {
+                    TagAPI.refreshPlayer(player);
+                }
             }
         }
     }
