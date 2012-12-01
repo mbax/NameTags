@@ -94,6 +94,7 @@ public class NameTags extends JavaPlugin implements Listener {
         }
     }
 
+    private static final String CONFIG_NOLONGNAMES = "noChangeForLongNames";
     private static final String CONFIG_REFRESH = "refreshAutomatically";
     private static final String CONFIG_SET_DISPLAYNAME = "setDisplayName";
     private static final String CONFIG_SET_TABNAME = "setTabName";
@@ -103,6 +104,7 @@ public class NameTags extends JavaPlugin implements Listener {
     private int refreshTaskID;
     private boolean setDisplayName;
     private boolean setTabName;
+    private boolean noLongNames;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -148,7 +150,7 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private void calculate(Player player) {
-        final StringBuilder name = new StringBuilder();
+        StringBuilder name = new StringBuilder();
         final List<Color> colors = Arrays.asList(Color.values());
         Collections.shuffle(colors);
         for (final Color color : colors) {
@@ -167,7 +169,11 @@ public class NameTags extends JavaPlugin implements Listener {
         }
         name.append(player.getName());
         if (name.length() > 16) {
-            name.setLength(16);
+            if (this.noLongNames) {
+                name = new StringBuilder().append(player.getName());
+            } else {
+                name.setLength(16);
+            }
         }
         final String newName = name.toString();
         player.setMetadata(NameTags.METADATA_NAME, new FixedMetadataValue(this, newName));
@@ -223,6 +229,7 @@ public class NameTags extends JavaPlugin implements Listener {
         }
         this.setDisplayName = newSetDisplayName;
         this.setTabName = newSetTabName;
+        this.noLongNames = this.getConfig().getBoolean(NameTags.CONFIG_NOLONGNAMES, false);
         this.playerRefresh();
     }
 
