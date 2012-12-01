@@ -143,7 +143,7 @@ public class NameTags extends JavaPlugin implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onNameTag(PlayerReceiveNameTagEvent event) {
-        String tag = getDisplay(event.getNamedPlayer());
+        final String tag = this.getDisplay(event.getNamedPlayer());
         if (tag != null) {
             event.setTag(tag);
         }
@@ -236,12 +236,12 @@ public class NameTags extends JavaPlugin implements Listener {
     private void playerRefresh() {
         for (final Player player : this.getServer().getOnlinePlayers()) {
             if ((player != null) && player.isOnline()) {
-                String oldTag = getDisplay(player);
+                final String oldTag = this.getDisplay(player);
                 this.calculate(player);
-                String newTag = getDisplay(player);
-                boolean one = oldTag == null && newTag != null;
-                boolean two = oldTag != null && newTag == null;
-                boolean three = (oldTag != null && newTag != null) && !oldTag.equals(newTag);
+                final String newTag = this.getDisplay(player);
+                final boolean one = (oldTag == null) && (newTag != null);
+                final boolean two = (oldTag != null) && (newTag == null);
+                final boolean three = ((oldTag != null) && (newTag != null)) && !oldTag.equals(newTag);
                 if (one || two || three) {
                     TagAPI.refreshPlayer(player);
                 }
