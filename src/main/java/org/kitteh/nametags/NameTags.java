@@ -230,7 +230,12 @@ public class NameTags extends JavaPlugin implements Listener {
         this.setDisplayName = newSetDisplayName;
         this.setTabName = newSetTabName;
         this.noLongNames = this.getConfig().getBoolean(NameTags.CONFIG_NOLONGNAMES, false);
-        this.playerRefresh();
+        this.getServer().getScheduler().runTaskLater(this, new Runnable() {
+            @Override
+            public void run() {
+                NameTags.this.playerRefresh();
+            }
+        }, 2);
     }
 
     private void playerRefresh() {
