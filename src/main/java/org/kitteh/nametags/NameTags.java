@@ -95,6 +95,7 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private static final String CONFIG_NOLONGNAMES = "noChangeForLongNames";
+    private static final String CONFIG_ONLYSAME = "onlySeeSame";
     private static final String CONFIG_REFRESH = "refreshAutomatically";
     private static final String CONFIG_SET_DISPLAYNAME = "setDisplayName";
     private static final String CONFIG_SET_TABNAME = "setTabName";
@@ -105,6 +106,7 @@ public class NameTags extends JavaPlugin implements Listener {
     private boolean setDisplayName;
     private boolean setTabName;
     private boolean noLongNames;
+    private boolean onlySeeSelf;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -145,6 +147,20 @@ public class NameTags extends JavaPlugin implements Listener {
     public void onNameTag(PlayerReceiveNameTagEvent event) {
         final String tag = this.getDisplay(event.getNamedPlayer());
         if (tag != null) {
+            if (this.onlySeeSelf) {
+                final String otherTag = this.getDisplay(event.getPlayer());
+                if(otherTag == null) {
+                    return;
+                }
+                int ionamed = tag.indexOf(event.getNamedPlayer().getName());
+                int iosee = otherTag.indexOf(event.getPlayer().getName());
+                if(ionamed == 0 || ionamed != iosee){
+                    return;
+                }
+                if(!tag.substring(0, ionamed).equals(otherTag.substring(0,iosee))){
+                    return;
+                }
+            }
             event.setTag(tag);
         }
     }
@@ -230,6 +246,7 @@ public class NameTags extends JavaPlugin implements Listener {
         this.setDisplayName = newSetDisplayName;
         this.setTabName = newSetTabName;
         this.noLongNames = this.getConfig().getBoolean(NameTags.CONFIG_NOLONGNAMES, false);
+        this.onlySeeSelf = this.getConfig().getBoolean(NameTags.CONFIG_ONLYSAME, false);
         this.getServer().getScheduler().runTaskLater(this, new Runnable() {
             @Override
             public void run() {

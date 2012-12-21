@@ -2,3 +2,4 @@ setDisplayName: false
 setTabName: false
 refreshAutomatically: false
 noChangeForLongNames: false
+onlySeeSame: false
