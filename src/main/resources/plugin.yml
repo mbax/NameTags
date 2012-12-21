@@ -50,6 +50,9 @@ permissions:
     default: false
   nametags.format.italic:
     default: false
+  nametags.seenalways:
+    default: false
+    description: Seen even with onlySeeSame set to true
   nametags.reload:
     default: op
     description: Reload shtuff

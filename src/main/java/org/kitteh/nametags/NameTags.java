@@ -147,7 +147,7 @@ public class NameTags extends JavaPlugin implements Listener {
     public void onNameTag(PlayerReceiveNameTagEvent event) {
         final String tag = this.getDisplay(event.getNamedPlayer());
         if (tag != null) {
-            if (this.onlySeeSelf) {
+            if (this.onlySeeSelf && !event.getNamedPlayer().hasPermission("nametags.seenalways")) {
                 final String otherTag = this.getDisplay(event.getPlayer());
                 if(otherTag == null) {
                     return;

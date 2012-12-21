@@ -4,7 +4,7 @@
 
     <groupId>org.kitteh</groupId>
     <artifactId>nametags</artifactId>
-    <version>1.3</version>
+    <version>1.4-SNAPSHOT</version>
     <name>NameTags</name>
     <url>http://kitteh.org/</url>
     <description>Demonstration of TagAPI</description>
