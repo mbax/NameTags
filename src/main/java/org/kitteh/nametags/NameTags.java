@@ -154,7 +154,7 @@ public class NameTags extends JavaPlugin implements Listener {
                 }
                 int ionamed = tag.indexOf(event.getNamedPlayer().getName());
                 int iosee = otherTag.indexOf(event.getPlayer().getName());
-                if(ionamed == 0 || ionamed != iosee){
+                if(ionamed <= 0 || ionamed != iosee){
                     return;
                 }
                 if(!tag.substring(0, ionamed).equals(otherTag.substring(0,iosee))){
