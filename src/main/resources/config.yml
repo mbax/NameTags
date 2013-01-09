@@ -3,3 +3,4 @@ setTabName: false
 refreshAutomatically: false
 noChangeForLongNames: false
 onlySeeSame: false
+baseColor: white

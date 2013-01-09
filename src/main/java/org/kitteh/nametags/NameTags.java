@@ -94,6 +94,7 @@ public class NameTags extends JavaPlugin implements Listener {
         }
     }
 
+    private static final String CONFIG_BASECOLOR = "baseColor";
     private static final String CONFIG_NOLONGNAMES = "noChangeForLongNames";
     private static final String CONFIG_ONLYSAME = "onlySeeSame";
     private static final String CONFIG_REFRESH = "refreshAutomatically";
@@ -107,6 +108,7 @@ public class NameTags extends JavaPlugin implements Listener {
     private boolean setTabName;
     private boolean noLongNames;
     private boolean onlySeeSelf;
+    private ChatColor baseColor;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -149,15 +151,14 @@ public class NameTags extends JavaPlugin implements Listener {
         if (tag != null) {
             if (this.onlySeeSelf && !event.getNamedPlayer().hasPermission("nametags.seenalways")) {
                 final String otherTag = this.getDisplay(event.getPlayer());
-                if(otherTag == null) {
+                if (otherTag == null) {
+                    event.setTag((this.baseColor != null ? this.baseColor : "") + event.getNamedPlayer().getName());
                     return;
                 }
                 int ionamed = tag.indexOf(event.getNamedPlayer().getName());
                 int iosee = otherTag.indexOf(event.getPlayer().getName());
-                if(ionamed <= 0 || ionamed != iosee){
-                    return;
-                }
-                if(!tag.substring(0, ionamed).equals(otherTag.substring(0,iosee))){
+                if (ionamed <= 0 || ionamed != iosee || !tag.substring(0, ionamed).equals(otherTag.substring(0, iosee))) {
+                    event.setTag((this.baseColor != null ? this.baseColor : "") + event.getNamedPlayer().getName());
                     return;
                 }
             }
@@ -174,6 +175,9 @@ public class NameTags extends JavaPlugin implements Listener {
                 name.append(color.getColor());
                 break;
             }
+        }
+        if (name.length() == 0 && this.baseColor != null) {
+            name.append(this.baseColor);
         }
         final List<Format> formats = Arrays.asList(Format.values());
         Collections.shuffle(formats);
@@ -243,6 +247,8 @@ public class NameTags extends JavaPlugin implements Listener {
                 }
             }
         }
+        ChatColor newBaseColor = ChatColor.valueOf(this.getConfig().getString(NameTags.CONFIG_BASECOLOR, "white"));
+        this.baseColor = newBaseColor == ChatColor.WHITE ? null : newBaseColor;
         this.setDisplayName = newSetDisplayName;
         this.setTabName = newSetTabName;
         this.noLongNames = this.getConfig().getBoolean(NameTags.CONFIG_NOLONGNAMES, false);
