@@ -247,7 +247,12 @@ public class NameTags extends JavaPlugin implements Listener {
                 }
             }
         }
-        ChatColor newBaseColor = ChatColor.valueOf(this.getConfig().getString(NameTags.CONFIG_BASECOLOR, "white"));
+        ChatColor newBaseColor;
+        try {
+            newBaseColor = ChatColor.valueOf(this.getConfig().getString(NameTags.CONFIG_BASECOLOR, "white").toUpperCase());
+        } catch (Exception e) {
+            newBaseColor = null;
+        }
         this.baseColor = newBaseColor == ChatColor.WHITE ? null : newBaseColor;
         this.setDisplayName = newSetDisplayName;
         this.setTabName = newSetTabName;
