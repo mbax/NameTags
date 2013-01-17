@@ -198,7 +198,7 @@ public class NameTags extends JavaPlugin implements Listener {
         final String newName = name.toString();
         player.setMetadata(NameTags.METADATA_NAME, new FixedMetadataValue(this, newName));
         if (this.setDisplayName) {
-            player.setDisplayName(newName);
+            player.setDisplayName(newName + ChatColor.RESET);
         }
         if (this.setTabName) {
             player.setPlayerListName(newName);
