@@ -40,6 +40,25 @@ permissions:
     default: false
   nametags.color.yellow:
     default: false
+  nametags.color.random:
+    default: false
+    description: All colors possible.
+    children:
+      nametags.color.black: true
+      nametags.color.dark_blue: true
+      nametags.color.dark_green: true
+      nametags.color.dark_aqua: true
+      nametags.color.dark_purple: true
+      nametags.color.dark_red: true
+      nametags.color.gold: true
+      nametags.color.gray: true
+      nametags.color.dark_gray: true
+      nametags.color.blue: true
+      nametags.color.green: true
+      nametags.color.aqua: true
+      nametags.color.red: true
+      nametags.color.light_purple: true
+      nametags.color.yellow: true
   nametags.format.magic:
     default: false
   nametags.format.bold:
