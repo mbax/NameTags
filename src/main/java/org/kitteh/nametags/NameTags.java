@@ -155,9 +155,9 @@ public class NameTags extends JavaPlugin implements Listener {
                     event.setTag((this.baseColor != null ? this.baseColor : "") + event.getNamedPlayer().getName());
                     return;
                 }
-                int ionamed = tag.indexOf(event.getNamedPlayer().getName());
-                int iosee = otherTag.indexOf(event.getPlayer().getName());
-                if (ionamed <= 0 || ionamed != iosee || !tag.substring(0, ionamed).equals(otherTag.substring(0, iosee))) {
+                final int ionamed = tag.indexOf(event.getNamedPlayer().getName());
+                final int iosee = otherTag.indexOf(event.getPlayer().getName());
+                if ((ionamed <= 0) || (ionamed != iosee) || !tag.substring(0, ionamed).equals(otherTag.substring(0, iosee))) {
                     event.setTag((this.baseColor != null ? this.baseColor : "") + event.getNamedPlayer().getName());
                     return;
                 }
@@ -176,7 +176,7 @@ public class NameTags extends JavaPlugin implements Listener {
                 break;
             }
         }
-        if (name.length() == 0 && this.baseColor != null) {
+        if ((name.length() == 0) && (this.baseColor != null)) {
             name.append(this.baseColor);
         }
         final List<Format> formats = Arrays.asList(Format.values());
@@ -250,7 +250,7 @@ public class NameTags extends JavaPlugin implements Listener {
         ChatColor newBaseColor;
         try {
             newBaseColor = ChatColor.valueOf(this.getConfig().getString(NameTags.CONFIG_BASECOLOR, "white").toUpperCase());
-        } catch (Exception e) {
+        } catch (final Exception e) {
             newBaseColor = null;
         }
         this.baseColor = newBaseColor == ChatColor.WHITE ? null : newBaseColor;
