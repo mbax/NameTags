@@ -95,6 +95,7 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private static final String CONFIG_BASECOLOR = "baseColor";
+    private static final String CONFIG_BASECOLOR_DEFAULT = "white";
     private static final String CONFIG_NOLONGNAMES = "noChangeForLongNames";
     private static final String CONFIG_ONLYSAME = "onlySeeSame";
     private static final String CONFIG_REFRESH = "refreshAutomatically";
@@ -222,9 +223,25 @@ public class NameTags extends JavaPlugin implements Listener {
         if (!this.configFile.exists()) {
             this.saveDefaultConfig();
         }
+        if (!this.getConfig().contains(NameTags.CONFIG_BASECOLOR)) {
+            this.getConfig().set(NameTags.CONFIG_BASECOLOR, NameTags.CONFIG_BASECOLOR_DEFAULT);
+        }
+        if (!this.getConfig().contains(NameTags.CONFIG_NOLONGNAMES)) {
+            this.getConfig().set(NameTags.CONFIG_NOLONGNAMES, false);
+        }
+        if (!this.getConfig().contains(NameTags.CONFIG_ONLYSAME)) {
+            this.getConfig().set(NameTags.CONFIG_ONLYSAME, false);
+        }
         if (!this.getConfig().contains(NameTags.CONFIG_REFRESH)) {
             this.getConfig().set(NameTags.CONFIG_REFRESH, false);
         }
+        if (!this.getConfig().contains(NameTags.CONFIG_SET_DISPLAYNAME)) {
+            this.getConfig().set(NameTags.CONFIG_SET_DISPLAYNAME, false);
+        }
+        if (!this.getConfig().contains(NameTags.CONFIG_SET_TABNAME)) {
+            this.getConfig().set(NameTags.CONFIG_SET_TABNAME, false);
+        }
+        this.saveConfig();
         if (this.getConfig().getBoolean(NameTags.CONFIG_REFRESH, false)) {
             this.refreshTaskID = this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
                 @Override
