@@ -223,6 +223,7 @@ public class NameTags extends JavaPlugin implements Listener {
         if (!this.configFile.exists()) {
             this.saveDefaultConfig();
         }
+        this.reloadConfig();
         if (!this.getConfig().contains(NameTags.CONFIG_BASECOLOR)) {
             this.getConfig().set(NameTags.CONFIG_BASECOLOR, NameTags.CONFIG_BASECOLOR_DEFAULT);
         }
