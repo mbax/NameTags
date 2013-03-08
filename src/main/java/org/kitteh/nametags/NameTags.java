@@ -17,11 +17,15 @@ package org.kitteh.nametags;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -67,6 +71,10 @@ public class NameTags extends JavaPlugin implements Listener {
         public String getNode() {
             return this.node;
         }
+        
+		public String getName() {
+			return this.name().toUpperCase();
+		}
 
     }
 
@@ -92,6 +100,9 @@ public class NameTags extends JavaPlugin implements Listener {
         public String getNode() {
             return this.node;
         }
+        public String getName() {
+			return this.name().toUpperCase();
+		}
     }
 
     private static final String CONFIG_BASECOLOR = "baseColor";
@@ -102,6 +113,7 @@ public class NameTags extends JavaPlugin implements Listener {
     private static final String CONFIG_SET_DISPLAYNAME = "setDisplayName";
     private static final String CONFIG_SET_TABNAME = "setTabName";
     private static final String METADATA_NAME = "nametags.displayname";
+    private static final String CONFIG_SET_IGNORED = "IngoredPlayers";
 
     private File configFile;
     private int refreshTaskID;
@@ -110,6 +122,8 @@ public class NameTags extends JavaPlugin implements Listener {
     private boolean noLongNames;
     private boolean onlySeeSelf;
     private ChatColor baseColor;
+	private static HashMap<String, String> _formats;
+	private static HashMap<String, String> _colors;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -136,6 +150,8 @@ public class NameTags extends JavaPlugin implements Listener {
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        _colors = new HashMap<String, String>();
+		_formats = new HashMap<String, String>(); 
         this.configFile = new File(this.getDataFolder(), "config.yml");
         this.load();
         this.getServer().getPluginManager().registerEvents(this, this);
@@ -171,6 +187,29 @@ public class NameTags extends JavaPlugin implements Listener {
         StringBuilder name = new StringBuilder();
         final List<Color> colors = Arrays.asList(Color.values());
         Collections.shuffle(colors);
+        final List<Format> formats = Arrays.asList(Format.values());
+        Collections.shuffle(formats);
+        String nick = player.getName().toLowerCase();
+		if (_colors.containsKey(nick)
+				|| _formats.containsKey(nick)) {
+			
+			if (_colors.containsKey(nick)) {
+				for (final Color color : colors) {
+					if (color.getName().equals(_colors.get(nick))) {
+						name.append(color.getColor());
+						break;
+					}
+				}
+			}
+			if (_formats.containsKey(nick)){
+				for (final Format format : formats) {
+					if(format.getName().equals(_formats.get(nick))){
+						name.append(format.getColor());
+						break;
+					}
+				}
+			}
+		} else { 
         for (final Color color : colors) {
             if (player.hasPermission(color.getNode())) {
                 name.append(color.getColor());
@@ -180,14 +219,14 @@ public class NameTags extends JavaPlugin implements Listener {
         if ((name.length() == 0) && (this.baseColor != null)) {
             name.append(this.baseColor);
         }
-        final List<Format> formats = Arrays.asList(Format.values());
-        Collections.shuffle(formats);
+        
         for (final Format format : formats) {
             if (player.hasPermission(format.getNode())) {
                 name.append(format.getColor());
                 break;
             }
         }
+		}
         name.append(player.getName());
         if (name.length() > 16) {
             if (this.noLongNames) {
@@ -216,6 +255,23 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private void load() {
+    	if (getConfig().contains(NameTags.CONFIG_SET_IGNORED)) {
+			ConfigurationSection sec = getConfig().getConfigurationSection(
+					NameTags.CONFIG_SET_IGNORED);
+			Set<String> niks = sec.getKeys(false);
+			Iterator<String> iniks = niks.iterator();
+			while (iniks.hasNext()) {
+				String nick = iniks.next().toLowerCase();
+				if (sec.contains(nick + ".color")) {
+					_colors.put(nick, sec.getString(nick + ".color")
+							.toUpperCase());
+				}
+				if (sec.contains(nick + ".format")) {
+					_formats.put(nick, sec.getString(nick + ".format")
+							.toUpperCase());
+				}
+			}
+		} 
         if (this.refreshTaskID != -1) {
             this.getServer().getScheduler().cancelTask(this.refreshTaskID);
             this.refreshTaskID = -1;
