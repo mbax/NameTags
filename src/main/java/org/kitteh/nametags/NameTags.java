@@ -255,6 +255,8 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private void load() {
+    	_colors.clear();
+    	_formats.clear();
     	if (getConfig().contains(NameTags.CONFIG_SET_IGNORED)) {
 			ConfigurationSection sec = getConfig().getConfigurationSection(
 					NameTags.CONFIG_SET_IGNORED);
