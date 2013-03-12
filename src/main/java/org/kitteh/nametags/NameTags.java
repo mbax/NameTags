@@ -50,7 +50,8 @@ public class NameTags extends JavaPlugin implements Listener {
         green,
         light_purple,
         red,
-        yellow;
+        yellow,
+        white;
 
         private final ChatColor color;
         private final String node;
@@ -179,6 +180,9 @@ public class NameTags extends JavaPlugin implements Listener {
         }
         if ((name.length() == 0) && (this.baseColor != null)) {
             name.append(this.baseColor);
+        }
+        if (name.length() > 1 && name.charAt(1) == 'f') {
+            name.setLength(0);
         }
         final List<Format> formats = Arrays.asList(Format.values());
         Collections.shuffle(formats);

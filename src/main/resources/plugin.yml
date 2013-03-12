@@ -40,6 +40,8 @@ permissions:
     default: false
   nametags.color.yellow:
     default: false
+  nametags.color.white:
+    default: false
   nametags.color.random:
     default: false
     description: All colors possible.
@@ -59,6 +61,7 @@ permissions:
       nametags.color.red: true
       nametags.color.light_purple: true
       nametags.color.yellow: true
+      nametags.color.white: true
   nametags.format.magic:
     default: false
   nametags.format.bold:
@@ -94,6 +97,7 @@ permissions:
       nametags.color.red: true
       nametags.color.light_purple: true
       nametags.color.yellow: true
+      nametags.color.white: true
       nametags.format.magic: true
       nametags.format.bold: true
       nametags.format.strikethrough: true
