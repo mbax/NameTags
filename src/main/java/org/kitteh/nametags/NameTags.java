@@ -203,10 +203,11 @@ public class NameTags extends JavaPlugin implements Listener {
                 break;
             }
         }
-        name.append(player.getName());
+        final String cleanName = player.getName();
+        name.append(cleanName);
         if (name.length() > 16) {
             if (this.noLongNames) {
-                name.delete(0, name.length()).append(player.getName());
+                name.delete(0, name.length()).append(cleanName);
             } else {
                 name.setLength(16);
             }
@@ -214,11 +215,11 @@ public class NameTags extends JavaPlugin implements Listener {
         final String newName = name.toString();
         player.setMetadata(NameTags.METADATA_NAME, new FixedMetadataValue(this, newName));
 
-        this.nameTagMap.put(player.getName(), newName);
+        this.nameTagMap.put(cleanName, newName);
         if (player.hasPermission("nametags.seenalways")) {
-            this.seenAlways.put(player.getName(), NameTags.ADORABLE_OBJECT);
+            this.seenAlways.put(cleanName, NameTags.ADORABLE_OBJECT);
         } else {
-            this.seenAlways.remove(player.getName());
+            this.seenAlways.remove(cleanName);
         }
 
         if (this.setDisplayName) {
