@@ -18,6 +18,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -28,9 +30,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.kitteh.tag.PlayerReceiveNameTagEvent;
+import org.kitteh.tag.AsyncPlayerReceiveNameTagEvent;
 import org.kitteh.tag.TagAPI;
 
 public class NameTags extends JavaPlugin implements Listener {
@@ -104,6 +105,8 @@ public class NameTags extends JavaPlugin implements Listener {
     private static final String CONFIG_SET_TABNAME = "setTabName";
     private static final String METADATA_NAME = "nametags.displayname";
 
+    private static final Object ADORABLE_OBJECT = new Object();
+
     private File configFile;
     private int refreshTaskID;
     private boolean setDisplayName;
@@ -111,6 +114,8 @@ public class NameTags extends JavaPlugin implements Listener {
     private boolean noLongNames;
     private boolean onlySeeSelf;
     private ChatColor baseColor;
+    private final Map<String, String> nameTagMap = new ConcurrentHashMap<String, String>();
+    private final Map<String, Object> seenAlways = new ConcurrentHashMap<String, Object>();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -148,10 +153,10 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW)
-    public void onNameTag(PlayerReceiveNameTagEvent event) {
+    public void onNameTag(AsyncPlayerReceiveNameTagEvent event) {
         final String tag = this.getDisplay(event.getNamedPlayer());
         if (tag != null) {
-            if (this.onlySeeSelf && !event.getNamedPlayer().hasPermission("nametags.seenalways")) {
+            if (this.onlySeeSelf && !this.seenAlways.containsKey(event.getNamedPlayer().getName())) {
                 final String otherTag = this.getDisplay(event.getPlayer());
                 if (otherTag == null) {
                     event.setTag((this.baseColor != null ? this.baseColor : "") + event.getNamedPlayer().getName());
@@ -181,7 +186,7 @@ public class NameTags extends JavaPlugin implements Listener {
         if ((name.length() == 0) && (this.baseColor != null)) {
             name.append(this.baseColor);
         }
-        if (name.length() > 1 && name.charAt(1) == 'f') {
+        if ((name.length() > 1) && (name.charAt(1) == 'f')) {
             name.setLength(0);
         }
         final List<Format> formats = Arrays.asList(Format.values());
@@ -202,6 +207,14 @@ public class NameTags extends JavaPlugin implements Listener {
         }
         final String newName = name.toString();
         player.setMetadata(NameTags.METADATA_NAME, new FixedMetadataValue(this, newName));
+
+        this.nameTagMap.put(player.getName(), newName);
+        if (player.hasPermission("nametags.seenalways")) {
+            this.seenAlways.put(player.getName(), NameTags.ADORABLE_OBJECT);
+        } else {
+            this.seenAlways.remove(player.getName());
+        }
+
         if (this.setDisplayName) {
             player.setDisplayName(newName + ChatColor.RESET);
         }
@@ -211,12 +224,7 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private String getDisplay(Player player) {
-        for (final MetadataValue value : player.getMetadata(NameTags.METADATA_NAME)) {
-            if (value.getOwningPlugin().equals(this)) {
-                return value.asString();
-            }
-        }
-        return null;
+        return this.nameTagMap.get(player.getName());
     }
 
     private void load() {
