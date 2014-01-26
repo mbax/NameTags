@@ -180,7 +180,7 @@ public class NameTags extends JavaPlugin implements Listener {
     }
 
     private void calculate(Player player) {
-        StringBuilder name = new StringBuilder();
+        final StringBuilder name = new StringBuilder();
         final List<Color> colors = Arrays.asList(Color.values());
         Collections.shuffle(colors);
         for (final Color color : colors) {
