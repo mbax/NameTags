@@ -206,7 +206,7 @@ public class NameTags extends JavaPlugin implements Listener {
         name.append(player.getName());
         if (name.length() > 16) {
             if (this.noLongNames) {
-                name = new StringBuilder().append(player.getName());
+                name.delete(0, name.length()).append(player.getName());
             } else {
                 name.setLength(16);
             }
