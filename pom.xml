@@ -4,7 +4,7 @@
 
     <groupId>org.kitteh</groupId>
     <artifactId>nametags</artifactId>
-    <version>2.2</version>
+    <version>3.0-SNAPSHOT</version>
     <name>NameTags</name>
     <url>http://kitteh.org/</url>
     <description>Demonstration of TagAPI</description>
@@ -28,13 +28,13 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.4.7-R1.0</version>
+            <version>1.7.2-R0.2</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.kitteh</groupId>
             <artifactId>tagapi</artifactId>
-            <version>1.9.3</version>
+            <version>3.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
     </dependencies>
